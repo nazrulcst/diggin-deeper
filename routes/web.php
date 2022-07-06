@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
+use App\Events\UserProfileViewNotify;
+
+use App\Events\TaskEvent;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,4 +27,11 @@ Route::get('/create-user-with-artisan-command', function () {
 
 Route::get('/',function(){
     return view('welcome');
+});
+
+
+Route::get('/event',function(){
+    //return "Hello.";
+    $data = ['name'=>'nazrul islam','email'=>'nazrulcst@gmail.com'];
+    return event(new UserProfileViewNotify($data));
 });
