@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CacheController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,17 @@ Route::get('/create-user-with-artisan-command', function () {
 
 
 
+
+
+
 Route::get('/',function(){
     return view('welcome');
 });
+
+
+Route::get('cache',[CacheController::class,'index']);
+Route::get('posts',[PostController::class,'index']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
