@@ -26,7 +26,7 @@ $posts = [
     'description'=>'Hello, Bangladesh'
 ]
 Cache::put('posts',$posts,1000);
-Cache::put('greetingCache','Hello Bangladesh',1000); ```
+Cache::put('greetingCache','Hello Bangladesh',1000);
 
     
 
