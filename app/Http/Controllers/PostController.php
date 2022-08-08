@@ -6,87 +6,73 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use App\Events\PostCreateEvent;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
-        Event::dispatch( new PostCreateEvent());
-        $posts = cache('posts',function(){
+    
+        Event::dispatch(new PostCreateEvent() );
+        $posts = Cache::get('posts',function(){
             return Post::get();
         });
 
-        return view('blog.index',$posts);
+        return view('blog.index')->with('posts',$posts);
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('blog.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title'=> 'required|unique:posts|max:255',
+            'description'=> 'required|max:255',
+        ]);
+
+        $post = Post::create([
+            'title'=> $request->title,
+            'description'=> $request->description,
+            'user_id'=>1,
+        ]);
+
+        return back()->with('success', 'Post created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function show(Post $post)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
+    public function edit(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        return view('blog.edit')->with('post',$post);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        $validated = $request->validate([
+            'title'=> 'required|unique:posts|max:255',
+            'description'=> 'required|max:255',
+        ]);
+
+        $post->title = $request->title; 
+        $post->description = $request->description; 
+        $post->update();
+        return back()->with('success', 'Post created successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        Post::destroy($id);
+        return back()->with('success', 'Post deleted successfully');
+        
     }
 }

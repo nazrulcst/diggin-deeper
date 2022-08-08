@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 
 use App\Events\PostCreateEvent;
+use App\Events\PostRetrivedEvent;
 use App\Listeners\PostCacheListener;
 
 class EventServiceProvider extends ServiceProvider
@@ -25,7 +26,12 @@ class EventServiceProvider extends ServiceProvider
 
         PostCreateEvent::class => [
             PostCacheListener::class,
+        ],
+
+        PostRetrivedEvent::class => [
+            PostCacheListener::class,
         ]
+
 
     ];
 
